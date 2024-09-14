@@ -1,0 +1,10 @@
+@use './variables' as v;
+
+.section {
+    margin-top: calc(v.$separation / 2);
+    margin-bottom: calc(v.$separation / 2);
+}
+
+.centered-content {
+    max-width: 800px;
+}

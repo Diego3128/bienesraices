@@ -1,0 +1,22 @@
+@use '../base/mixins' as m;
+@use '../base/variables' as v;
+
+@include m.tablet {
+    .aboutus-icons {
+        padding: 0 4rem;
+        @include m.grid(3, 3rem);
+    }
+}
+
+
+.icon {
+    text-align: center;
+
+    img {
+        height: 10rem;
+    }
+
+    h3 {
+        text-transform: uppercase;
+    }
+}

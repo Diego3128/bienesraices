@@ -1,0 +1,43 @@
+@use './variables' as v;
+
+/** Media Queries **/
+@mixin phone {
+    @media (min-width: v.$phone) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: v.$tablet) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: v.$desktop) {
+        @content;
+    }
+}
+
+@mixin grid($columns, $gap: 2rem) {
+    display: grid;
+    gap: $gap;
+    grid-template-columns: repeat($columns, 1fr);
+}
+
+
+// Flex mixins
+
+@mixin flexRow($columnGap: 2rem) {
+    display: flex;
+    padding: 0 1rem;
+    justify-content: space-between;
+    // column-gap: $columnGap;
+}
+
+// formaters
+
+@mixin container {
+    width: min(90%, 120rem);
+    margin: 0 auto;
+}
