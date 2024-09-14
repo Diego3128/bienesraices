@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real estate</title>
     <link rel="stylesheet" href="./build/css/app.css">
 </head>
+
 <body>
     <header class="header header--home">
         <div class="container header-container">
@@ -31,22 +33,70 @@
             <div class="icon">
                 <img loading="lazy" src="./build/img/icono1.svg" alt="security icon">
                 <h3>Security</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae libero a itaque, dolore cum reprehenderit ad nesciunt ex fugiat tempora?</p>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae libero a itaque, dolore cum
+                    reprehenderit ad nesciunt ex fugiat tempora?</p>
             </div>
 
             <div class="icon">
                 <img loading="lazy" src="./build/img/icono2.svg" alt="money icon">
                 <h3>Price</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae libero a itaque, dolore cum reprehenderit ad nesciunt ex fugiat tempora?</p>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae libero a itaque, dolore cum
+                    reprehenderit ad nesciunt ex fugiat tempora?</p>
             </div>
 
             <div class="icon">
                 <img loading="lazy" src="./build/img/icono3.svg" alt="clock icon">
                 <h3>Time</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae libero a itaque, dolore cum reprehenderit ad nesciunt ex fugiat tempora?</p>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae libero a itaque, dolore cum
+                    reprehenderit ad nesciunt ex fugiat tempora?</p>
             </div>
         </div>
     </main>
+
+    <section class="container">
+        <h2>Houses and apts for sale</h2>
+
+        <div class="ads-container">
+            <div class="card">
+                <picture>
+                    <source srcset="./build/img/anuncio1.webp" type="image/webp">
+                    <source srcset="./build/img/anuncio1.jpg" type="image/jpeg">
+                    <img loading="lazy" src="./build/img/anuncio1.jpg" alt="house advertisement">
+                </picture>
+
+                <div class="card__details">
+                    <h3 class="card__title">Luxury House by a lake</h3>
+                    <p class="card__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet placeat
+                        possimus aliquam maxime
+                        nobis nesciunt.</p>
+                    <p class="card__price"><span class="dollar">$</span> 20.000.000</p>
+                    <ul class="card__icons">
+
+                        <li>
+                            <img src="./build/img/icono_wc.svg" alt="restroom icon">
+                            <p>3</p>
+                        </li>
+
+                        <li>
+                            <img src="./build/img/icono_estacionamiento.svg" alt="parking lot icon">
+                            <p>4</p>
+                        </li>
+
+                        <li>
+                            <img src="./build/img/icono_dormitorio.svg" alt="room icon">
+                            <p>4</p>
+                        </li>
+
+                    </ul>
+                    <!-- card__icons -->
+                </div>
+                <!-- card__details -->
+                <a href="" class="card__btn">More details</a>
+            </div>
+            <!-- card -->
+        </div>
+        <!-- ads-container -->
+    </section>
 
     <footer class="footer section">
         <div class="container footer-container">
@@ -62,9 +112,10 @@
 
 
     </footer>
-    
+
     <!-- Modernizer script -->
     <!-- <script src="./src/js/modernizr.js"></script> -->
     <script src="./build/js/bundle.min.js"></script>
 </body>
+
 </html>
