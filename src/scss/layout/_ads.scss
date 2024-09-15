@@ -4,6 +4,7 @@
 .ads-container {
     @include m.tablet {
         @include m.grid(3);
+        margin-bottom: 4rem;
     }
 }
 
@@ -42,13 +43,8 @@
         }
     }
 
-    .card__btn {
-        @include m.btnLarge(v.$yellow);
+}
 
-        &:hover,
-        &:focus {
-            opacity: .8;
-        }
-    }
-
+.align-right {
+    text-align: right;
 }
