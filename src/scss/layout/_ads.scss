@@ -13,11 +13,12 @@
 }
 
 .card {
-    background-color: lighten(v.$gray, 5);
+    background-color: lighten(v.$gray, 9);
     border-radius: 1rem;
     overflow: hidden;
-    border: 2px v.$gray solid;
+    box-shadow: 2px 2px 6px #00000037;
     margin-bottom: 3rem;
+    padding-bottom: 2rem;
 
     picture {
         img {

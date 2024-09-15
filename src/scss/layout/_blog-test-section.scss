@@ -1,0 +1,65 @@
+@use '../base/variables' as v;
+@use '../base/mixins' as m;
+
+.blog-test-section {
+    @include m.tablet {
+        @include m.grid(2);
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.testimonial {
+    background: v.$green;
+    color: v.$white;
+    border-radius: 1rem;
+    padding: 2rem 1rem;
+}
+
+.blog-entry {
+    margin-bottom: 6rem;
+    background: lighten(v.$gray, 10);
+    border-radius: 1rem;
+    box-shadow: 2px 2px 6px #00000037;
+
+    @include m.desktop {
+        @include m.flexHorizontal();
+
+        .image {
+            flex-basis: 1;
+
+        }
+
+        .content {
+            flex-basis: 3;
+            padding: 0;
+        }
+    }
+
+    .image {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+}
+
+.content {
+    padding: 2rem 1rem;
+
+    & p {
+        margin: 1rem 0;
+    }
+
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    h4 {
+        margin: 0;
+    }
+
+    .text-yellow {
+        color: v.$yellow;
+    }
+}
