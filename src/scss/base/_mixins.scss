@@ -41,3 +41,16 @@
     width: min(90%, 120rem);
     margin: 0 auto;
 }
+
+//buttons
+@mixin btnLarge($bg: #000, $color: #fff) {
+    display: block;
+    padding: 1.5rem 1rem;
+    color: $color;
+    background: $bg;
+    border-radius: 1.5rem;
+    text-align: center;
+    font-weight: bolder;
+    text-transform: uppercase;
+    margin: 0 auto;
+}
