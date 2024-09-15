@@ -4,16 +4,20 @@
 
 .btnLarge {
     @include m.btnLarge();
+}
 
-    &.btnLarge--yellow {
-        background: v.$yellow;
-    }
+.btnLarge--yellow {
+    background: v.$yellow;
 }
 
 .btnSmall {
     @include m.btnSmall();
+}
 
-    &.btnSmall--green {
-        background: v.$green;
-    }
+.btnSmall--green {
+    background: v.$green;
+}
+
+.btnSmall--yellow {
+    background: v.$yellow;
 }
