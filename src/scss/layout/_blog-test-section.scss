@@ -8,12 +8,6 @@
     }
 }
 
-.testimonial {
-    background: v.$green;
-    color: v.$white;
-    border-radius: 1rem;
-    padding: 2rem 1rem;
-}
 
 .blog-entry {
     margin-bottom: 6rem;
@@ -77,5 +71,40 @@ h4 {
         bottom: 0;
         border-radius: 1rem;
         box-shadow: 0px 1px 6px -1px v.$yellow;
+    }
+}
+
+
+// .testimonials * {
+//     outline: 1px red solid;
+// }
+
+.testimonial {
+    background: v.$green;
+    color: v.$white;
+    border-radius: 1rem;
+    padding: 5rem 3rem 4rem 8rem;
+    box-shadow: 2px 2px 6px #00000037;
+
+    blockquote {
+        position: relative;
+        margin: 0 0 2rem;
+        font-size: 2rem;
+        font-weight: 400;
+        line-height: 2.2;
+
+        &::before {
+            content: '';
+            position: absolute;
+            height: 5rem;
+            width: 5rem;
+            left: -5rem;
+            top: -2rem;
+            background-image: url(../img/comilla.svg);
+        }
+    }
+
+    p {
+        text-align: right;
     }
 }
