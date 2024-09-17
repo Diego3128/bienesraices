@@ -64,16 +64,6 @@
         }
     }
 
-    .card__price {
-        color: v.$green;
-        text-decoration: underline;
-        font-size: 2.5rem;
-
-        .dollar {
-            font-weight: bolder;
-        }
-    }
-
     .card__icons {
         list-style: none;
         @include m.flexRow(1rem);
@@ -95,4 +85,14 @@
 .align-right {
     text-align: right;
     margin: 4rem 0 8rem;
+}
+
+.card__price {
+    color: v.$green;
+    text-decoration: underline;
+    font-size: 2.5rem;
+
+    .dollar {
+        font-weight: bolder;
+    }
 }
