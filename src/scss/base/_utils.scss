@@ -1,8 +1,7 @@
 @use './variables' as v;
 
 .section {
-    margin-top: calc(v.$separation / 2);
-    margin-bottom: calc(v.$separation / 2);
+    margin-bottom: 6rem;
 }
 
 .centered-content {
