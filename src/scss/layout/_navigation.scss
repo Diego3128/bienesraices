@@ -21,6 +21,13 @@
 }
 
 .navigation {
+    display: none;
+    &.show{
+        display: block;
+        @include m.tablet{
+            display: flex;
+        }
+    }
     a {
         display: block;
         text-align: center;
@@ -38,5 +45,21 @@
         display: flex;
         justify-content: space-between;
         column-gap: 3rem;
+    }
+}
+
+
+.mobile-menu{
+    @include m.tablet{
+        display: none;
+    }
+    img{
+        width: 4rem;
+        transform: rotate(0deg);
+    }
+
+    img.flip{
+        transition: transform 500ms ease-in-out;
+        transform: rotate(90deg);
     }
 }
