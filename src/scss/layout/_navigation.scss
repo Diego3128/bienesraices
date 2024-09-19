@@ -21,13 +21,6 @@
 }
 
 .navigation {
-    display: none;
-    &.show{
-        display: block;
-        @include m.tablet{
-            display: flex;
-        }
-    }
     a {
         display: block;
         text-align: center;
@@ -48,6 +41,30 @@
     }
 }
 
+
+.bar{
+    .navigation{
+        overflow: hidden;
+    }
+    .navigation a{
+        transform: translateY(-40rem);
+        transition: transform 600ms ease-in-out;
+        @include m.tablet{
+            transform: translateY(0);
+        }
+    }
+    .show a{
+        transform: translateY(0);
+    }
+
+    .burguer-icon{
+        transform: rotate(0);
+        transition: transform 400ms ease-in-out;
+    }
+    .rotate{
+        transform: rotate(90deg);
+    }
+}
 
 .mobile-menu{
     @include m.tablet{
