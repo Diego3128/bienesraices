@@ -1,12 +1,13 @@
 @use '../base/variables' as v;
 @use '../base/mixins' as m;
 
+
+
 .bar {
     display: flex;
     flex-direction: column;
     padding: 2rem 3rem 0rem;
     row-gap: 4rem;
-
 
     img {
         width: 250px;
@@ -16,9 +17,31 @@
     @include m.tablet {
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+    }
+
+    .dark-mode-btn{
+        margin-bottom: 3rem;
+        width: 2.5rem;
+        filter: invert(100%);
+        &:hover{
+            cursor: pointer;
+        }
+        @include m.tablet{
+            display: inline-block;
+            margin-bottom: 1rem;
+            margin-top: -2rem;
+            margin-right: -3rem;
+        }
     }
 }
+.right{
+    text-align: unset;
+    @include m.tablet{
+        text-align: right;
+    }
+}
+
 
 .navigation {
     a {
