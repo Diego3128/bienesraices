@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+function darkMode() {
+    // toggle class 'dark-mode' to the body element
+    document.body.classList.toggle('dark-mode');
+}
 
 function burguerMenu() {
     const navigation = document.querySelector('.bar .navigation');
@@ -13,6 +17,9 @@ function burguerMenu() {
 }
 function eventListeners() {
     const mobileMenu = document.querySelector('.mobile-menu');
+    const darkModeIcon = document.querySelector('.dark-mode-btn');
+
 
     mobileMenu.addEventListener('click', burguerMenu);
+    darkModeIcon.addEventListener('click', darkMode);
 }
