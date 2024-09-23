@@ -72,6 +72,9 @@
         transition: all 600ms ease-in-out;
         &.show{
             height: 15rem;
+            @include m.tablet{
+                height: auto;
+            }
         }
         @include m.tablet{
             height: auto;
