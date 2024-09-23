@@ -68,6 +68,15 @@
 .bar{
     .navigation{
         overflow: hidden;
+        height: 0;
+        transition: all 600ms ease-in-out;
+        &.show{
+            height: 15rem;
+        }
+        @include m.tablet{
+            height: auto;
+        }
+        
     }
     .navigation a{
         transform: translateY(-40rem);
