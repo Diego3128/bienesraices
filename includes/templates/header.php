@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <header class="header <?php echo $homePage ? 'header--home' : ''; ?>">
+    <header class="header <?php echo isset($homePage) ? 'header--home' : ''; ?>">
         <div class="container header-container">
             <div class="bar">
                 <a href="/bienesraices/index.php">
