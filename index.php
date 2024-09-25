@@ -1,7 +1,7 @@
 <?php
-$homePage = true;
+require './includes/functions.php';
+includeTemplate(templateName: 'header', homePage: true);
 
-include './includes/templates/header.php';
 ?>
 
 <main class="container section">
@@ -227,5 +227,5 @@ include './includes/templates/header.php';
 </div>
 
 <?php
-include './includes/templates/footer.php';
+includeTemplate(templateName: 'footer');
 ?>
