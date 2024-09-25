@@ -3,7 +3,7 @@
         <?php
         include 'navigation.php';
         ?>
-        <p class="copyright">All rights reserved 2024</p>
+        <p class="copyright"> &copy; All rights reserved <?php echo date('Y'); ?></p>
     </div>
 
 
