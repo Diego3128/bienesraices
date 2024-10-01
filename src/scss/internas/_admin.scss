@@ -2,11 +2,14 @@
 .alert{
     padding: 2rem;
     color: v.$white;
-    background-color: v.$blue;
+    background-color: transparent;
     font-weight: bold;
     margin: 2rem auto;
     border-radius: 1rem;
     &.error{
         background: v.$red;
+    }
+    &.success{
+        background: v.$green;
     }
 }
