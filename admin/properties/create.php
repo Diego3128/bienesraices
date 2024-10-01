@@ -3,7 +3,6 @@
 require '../../includes/config/database.php';
 $db = connectToDB();
 
-
 // query to get sellers
 $sellerSqlQuery = "SELECT * FROM vendedores";
 //results
@@ -87,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($queryResult) {
             //redirect user
-            header("location: /admin");
+            header("location: /admin?created=1");
         } else {
             echo "No se pudo crear la propiedad";
         }
