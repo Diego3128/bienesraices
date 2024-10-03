@@ -1,7 +1,8 @@
 <?php
-// Shows conditional alert message if a new property was created
-$creaded = $_GET["created"] ?? null;
-$creaded = intval($creaded, 10);
+// Shows conditional alert message
+//1 = created, 2= updated, 3= deleted
+$result = $_GET["result"] ?? null;
+$result = intval($result, 10);
 
 // get properties from database
 
@@ -26,8 +27,10 @@ includeTemplate(templateName: 'header');
 <main class="container section">
     <h2>Administrador de bienesraices</h2>
 
-    <?php if ($creaded): ?>
+    <?php if ($result === 1): ?>
         <div class="alert success">Propiedad creada con exito!</div>
+    <?php elseif ($result === 2): ?>
+        <div class="alert success">Propiedad actualizada con exito!</div>
     <?php endif; ?>
 
     <a href="/admin/properties/create.php" class="btnSmall btnSmall--green">Crear</a>
@@ -53,7 +56,7 @@ includeTemplate(templateName: 'header');
                         <td><?php echo $property["precio"]; ?></td>
                         <td>
                             <a href="#" class="btnLarge btnLarge--red">Eliminar</a>
-                            <a href="#" class="btnLarge btnLarge--blue">Actualizar</a>
+                            <a href="properties/update.php?id=<?php echo $property["id"]; ?>" class=" btnLarge btnLarge--blue">Actualizar</a>
                         </td>
                     </tr>
                 <?php endwhile ?>
