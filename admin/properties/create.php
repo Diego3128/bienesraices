@@ -87,8 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($queryResult) {
             //redirect user
             header("location: /admin?created=1");
-        } else {
-            echo "No se pudo crear la propiedad";
         }
     }
 }
