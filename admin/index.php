@@ -6,7 +6,6 @@ $result = intval($result, 10);
 
 // import conexion
 require '../includes/config/database.php';
-
 //create an instance of the conexion
 $db = connectToDB();
 
