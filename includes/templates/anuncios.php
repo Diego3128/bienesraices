@@ -1,22 +1,13 @@
 <?php
-
-//PATH RELATIVE TO THE INDEX.PHP FILE// It's the file originally including everything
+//Import connection: PATH RELATIVE TO THE FILE THAT IS USING IT// It's the file originally including everything
 
 require "includes/config/database.php";
-
+//Create and instance of the conexion
 $db = connectToDB();
 
 $query = "SELECT * FROM propiedades LIMIT {$numProperties}";
 
-
 $queryResult = mysqli_query($db, $query);
-
-// echo "<pre>";
-// while ($r = mysqli_fetch_assoc($queryResult)):
-//     var_dump($r);
-// endwhile;
-// echo "</pre>";
-
 ?>
 
 

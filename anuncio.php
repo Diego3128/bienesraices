@@ -1,49 +1,66 @@
 <?php
+//Get if from query params
+$propertyId = $_GET["id"];
+//sanitize and validate id
+$propertyId = filter_var(filter_var($propertyId, FILTER_SANITIZE_NUMBER_INT), FILTER_VALIDATE_INT);
+//check id
+if (!$propertyId) {
+    header("location: /");
+}
+// import connection
+require 'includes/config/database.php';
+//create and instance
+$db = connectToDB();
+//sql query for the property using the id
+$propertySqlQuery = "SELECT * FROM propiedades WHERE id={$propertyId};";
+//query result
+$propertyResult = mysqli_query($db, $propertySqlQuery);
+//check query result
+if (!$propertyResult->num_rows) {
+    //return to main page if there are no records
+    header("location: /");
+}
+//fetch de property
+$property = mysqli_fetch_assoc($propertyResult);
+
 require './includes/functions.php';
 includeTemplate(templateName: 'header');
 ?>
 
 <main class="container section centered-content">
-    <h2>Casa lujosa con lago</h2>
+    <h2><?php echo $property["titulo"] ?></h2>
 
     <picture>
-        <source srcset="./build/img/anuncio1.webp" type="image/webp">
-        <source srcset="./build/img/anuncio1.jpg" type="image/jpeg">
-        <img loading="lazy" src="./build/img/anuncio1.jpg" alt="Propiedad anuncio">
+        <img loading="lazy" src="/images/<?php echo $property["imagen"] ?>" alt="Propiedad anuncio">
     </picture>
 
     <div class="house-description">
-        <p class="card__price"><span class="dollar">$</span> 20.000.000</p>
+        <p class="card__price"><span class="dollar">$</span> <?php echo $property["precio"] ?></p>
         <ul class="characteristics__icons">
 
             <li>
                 <img src="./build/img/icono_wc.svg" alt="restroom icon">
-                <p>3</p>
+                <p><?php echo $property["wc"] ?></p>
             </li>
 
             <li>
                 <img src="./build/img/icono_estacionamiento.svg" alt="parking lot icon">
-                <p>4</p>
+                <p><?php echo $property["estacionamiento"] ?></p>
             </li>
 
             <li>
                 <img src="./build/img/icono_dormitorio.svg" alt="room icon">
-                <p>4</p>
+                <p><?php echo $property["habitaciones"] ?></p>
             </li>
 
         </ul>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, corrupti. Totam iste quibusdam, aliquid
-            autem, ea ut necessitatibus, doloribus itaque eius tempora voluptatum vero culpa cumque. Rem hic ratione
-            velit?</p>
+        <p><?php echo $property["descripcion"] ?></p>
 
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque, tenetur dolores quasi molestiae deserunt
-            aut expedita dolorem blanditiis minus excepturi reprehenderit saepe reiciendis architecto, ex sunt sequi
-            in velit laborum repellendus laudantium perferendis tempora nulla voluptate accusantium. Iste a quo
-            sequi tenetur voluptates beatae, quod est, libero voluptate earum, nemo odio doloribus error rerum
-            labore natus. Id ratione culpa architecto.</p>
     </div>
 </main>
 
 <?php
 includeTemplate(templateName: 'footer');
+//close db connection
+mysqli_close($db);
 ?>
