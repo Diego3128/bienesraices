@@ -1,4 +1,11 @@
 <?php
+require '../../includes/functions.php';
+
+$auth = isAuthenticated();
+
+if (!$auth) {
+    header("location: /");
+}
 // database:
 require '../../includes/config/database.php';
 $db = connectToDB();
@@ -119,8 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-//functions
-require '../../includes/functions.php';
+//header template
 
 includeTemplate(templateName: 'header');
 ?>

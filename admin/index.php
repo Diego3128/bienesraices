@@ -1,4 +1,12 @@
 <?php
+require '../includes/functions.php';
+
+$auth = isAuthenticated();
+
+if (!$auth) {
+    header("location: /");
+}
+
 // Shows conditional alert message
 //1 = created, 2= updated, 3= deleted 4= error
 $result = $_GET["result"] ?? null;
@@ -50,7 +58,6 @@ $propertySqlQuery = "SELECT * FROM propiedades";
 $propertyResult = mysqli_query($db, $propertySqlQuery);
 
 // include header template
-require '../includes/functions.php';
 includeTemplate(templateName: 'header');
 
 ?>

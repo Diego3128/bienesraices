@@ -15,3 +15,16 @@ function includeTemplate(string $templateName, bool $homePage = false)
     $templatePath = formatSeparator($templatePath);
     include $templatePath;
 }
+//check user's session
+function isAuthenticated(): bool
+{
+    session_start();
+
+    $auth = $_SESSION["loggedin"] ?? null;
+
+    if ($auth) {
+        return true;
+    }
+
+    return false;
+}
