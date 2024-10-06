@@ -1,3 +1,12 @@
+<?php
+
+if (!isset($_SESSION["loggedin"])) {
+    session_start();
+}
+
+$auth = $_SESSION["loggedin"] ?? false;
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -23,7 +32,17 @@
                 <div class="right">
                     <img class="dark-mode-btn" src="/build/img/dark-mode.svg" alt="dark mode icon">
 
-                    <?php include 'navigation.php' ?>
+                    <nav class="navigation">
+                        <a href="/nosotros.php">Nosotros</a>
+                        <a href="/anuncios.php">anuncios</a>
+                        <a href="/blog.php">blog</a>
+                        <a href="/contacto.php">contactanos</a>
+                        <?php if ($auth) : ?>
+                            <a href="/close-session.php">Cerrar sesión</a>
+
+                        <?php endif ?>
+                    </nav>
+
                 </div>
             </div><!--bar-->
             <?php if ($homePage) { ?>

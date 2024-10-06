@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 session_start();
                 $_SESSION["user_email"] = $email;
                 $_SESSION["loggedin"] = true;
+                header("location: /admin");
             } else {
                 $errors[] = "El password para: " . $email . " es incorrecto";
             }
