@@ -1,7 +1,4 @@
 <?php
-//Import connection: PATH RELATIVE TO THE FILE THAT IS USING IT// It's the file originally including everything
-
-require "includes/config/database.php";
 //Create and instance of the conexion
 $db = connectToDB();
 

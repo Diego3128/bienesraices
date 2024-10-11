@@ -8,7 +8,7 @@ if (!$propertyId) {
     header("location: /");
 }
 // import connection
-require 'includes/config/database.php';
+require 'includes/app.php';
 //create and instance
 $db = connectToDB();
 //sql query for the property using the id
@@ -23,7 +23,6 @@ if (!$propertyResult->num_rows) {
 //fetch de property
 $property = mysqli_fetch_assoc($propertyResult);
 
-require './includes/functions.php';
 includeTemplate(templateName: 'header');
 ?>
 

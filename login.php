@@ -1,6 +1,6 @@
 <?php
 // import database connection
-require 'includes/config/database.php';
+require 'includes/app.php';
 // creat a connection instance
 $db = connectToDB();
 
@@ -47,7 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-require './includes/functions.php';
 includeTemplate(templateName: 'header');
 ?>
 
