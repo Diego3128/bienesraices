@@ -6,8 +6,9 @@ require 'config/database.php';
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Propiedad;
+// connect to the database
+$db = connectToDB();
 
-$propiedad = new Propiedad;
+// set db to the Propiedad class
 
-var_dump($propiedad);
+App\Propiedad::setDB($db);

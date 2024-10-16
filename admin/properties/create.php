@@ -1,19 +1,26 @@
 <?php
-require '../../includes/functions.php';
+require '../../includes/app.php';
 
-$auth = isAuthenticated();
+isAuthenticated();
 
-if (!$auth) {
-    header("location: /");
-}
+use App\Propiedad;
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
+// create image manager with GD driver
+$manager = new ImageManager(new Driver());
+
 // database:
-require '../../includes/config/database.php';
 $db = connectToDB();
 
 // query to get sellers
 $sellerSqlQuery = "SELECT * FROM vendedores";
 //results
 $sellerResult = mysqli_query($db, $sellerSqlQuery);
+
+//init variable to check inputs for possible errors
+$errors = Propiedad::getErrors();
 
 // init variables
 $titulo = "";
@@ -26,73 +33,53 @@ $vendedorId = "";
 $creado  = date("Y-m-d");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    //Split variables and update value
-    $titulo = mysqli_real_escape_string($db,  $_POST["titulo"]);
-    $precio = mysqli_real_escape_string($db,  $_POST["precio"]);
-    $descripcion = mysqli_real_escape_string($db,  $_POST["descripcion"]);
-    $habitaciones = mysqli_real_escape_string($db,  $_POST["habitaciones"]);
-    $wc = mysqli_real_escape_string($db,  $_POST["wc"]);
-    $estacionamiento = mysqli_real_escape_string($db,  $_POST["estacionamiento"]);
-    $vendedorId =  isset($_POST["vendedor"]) ? $_POST["vendedor"] : "";
+    //create a new instance of Propiedad
+    $propiedad = new Propiedad($_POST);
+    //img variables
+    $image;
+    $imageName;
 
-    $imagen = $_FILES["imagen"];
+    // check if the image was correctly uploaded:
+    if ($_FILES["imagen"]["error"] === UPLOAD_ERR_OK && $_FILES["imagen"]["tmp_name"]) {
+        //get  data from the uploded image
+        $propertyImg = $_FILES["imagen"];
+        //file temporary location
+        $imgTempDir = $propertyImg["tmp_name"];
 
-    $errors = []; //check inputs for possible erros
-
-
-    if (!$titulo) {
-        $errors[] = "El titulo es necesario";
-    }
-    if (!$precio) {
-        $errors[] = "El precio es necesario";
-    }
-    if (strlen($descripcion) < 50) {
-        $errors[] = "La descripción es muy corta";
-    }
-    if (!$wc) {
-        $errors[] = "El numero de baños es requerido";
-    }
-    if (!$habitaciones) {
-        $errors[] = "El numero de habitaciones es requerido";
-    }
-    if (!$estacionamiento) {
-        $errors[] = "El numero de lugares de estacionamiento es requerido";
-    }
-    if (!$vendedorId) {
-        $errors[] = "Elija un vendedor";
-    }
-    // validate image
-    if (!$imagen["name"]) {
-        $errors[] = "La imagen es obligatoria";
-    }
-    // validate image size, max: 1mb 
-    $maxSize = 1000000;
-    if ($imagen["size"] > $maxSize) {
-        $errors[] = "La imagen es muy grande";
-    }
-
-    // if there are no errors save in database
-    if (empty($errors)) {
-        // upload files // check if the dir doesn't exist
-        $imgDir = "../../images/";
-        if (!is_dir($imgDir)) {
-            mkdir($imgDir);
-        }
-        // image extension (jpg, png..)
-        $imageExt = pathinfo($imagen["name"])["extension"];
+        //CREATE A RANDOM NAME INCLUDING THE EXTENSION
+        // get image extension (jpg, png..)
+        $imageExt = pathinfo($propertyImg["name"])["extension"];
         // random name plus the extension
         $imageName = md5(uniqid(mt_rand())) . "." . $imageExt;
-        // move to a destination directory
-        move_uploaded_file($imagen["tmp_name"], $imgDir  . $imageName);
 
-        // Create sql query
-        $query = "INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id)
-            VALUES ('$titulo', '$precio', '$imageName', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId');";
-        //do the query
-        $queryResult = mysqli_query($db, $query);
+        //save the name of the image in the attribute of the instance
+        $propiedad->setImage($imageName);
 
-        if ($queryResult) {
-            //redirect user
+        //RESIZE IMAGE
+        // read image from file system
+        $image = $manager->read($imgTempDir);
+        // resize image proportionally to 800 width 600 height
+        $image->cover(800, 600);
+    }
+
+    // check for errors
+    $errors = $propiedad->validateInputs();
+
+    // if there are no errors, save the new property and also the image
+    if (empty($errors)) {
+        // Folder in the server to save the image
+        if (!is_dir(IMAGES_DIR)) {
+            mkdir(IMAGES_DIR);
+        }
+        //save the image in the server
+
+        // save modified image in new format in the server
+        $image->toJpeg()->save(IMAGES_DIR . $imageName);
+
+        //save the property into the database
+        $result = $propiedad->save();
+
+        if ($result) {
             header("location: /admin?result=1");
         }
     }
@@ -149,7 +136,7 @@ includeTemplate(templateName: 'header');
 
         <fieldset>
             <legend>Vendedor</legend>
-            <select name="vendedor">
+            <select name="vendedorId">
                 <option disabled selected>--Elija vendedor--</option>
                 <?php
                 while ($sellerRow = mysqli_fetch_assoc($sellerResult)) : ?>

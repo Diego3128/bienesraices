@@ -1,19 +1,13 @@
 <?php
-require '../includes/functions.php';
+require '../includes/app.php';
 
-$auth = isAuthenticated();
-
-if (!$auth) {
-    header("location: /");
-}
+isAuthenticated();
 
 // Shows conditional alert message
 //1 = created, 2= updated, 3= deleted 4= error
 $result = $_GET["result"] ?? null;
 $result = intval($result, 10);
 
-// import conexion
-require '../includes/config/database.php';
 //create an instance of the conexion
 $db = connectToDB();
 

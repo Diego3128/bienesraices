@@ -2,6 +2,7 @@
 // settings, variables and constant variables
 define('TEMPLATES_URL', __DIR__ . '/templates/');
 define('FUNCTIONS_URL', __DIR__ . '/functions.php');
+define('IMAGES_DIR', __DIR__ . '/../images/');
 
 
 function formatSeparator($path)
@@ -20,15 +21,21 @@ function includeTemplate(string $templateName, bool $homePage = false)
     include $templatePath;
 }
 //check user's session
-function isAuthenticated(): bool
+function isAuthenticated(): void
 {
     session_start();
 
     $auth = $_SESSION["loggedin"] ?? null;
 
-    if ($auth) {
-        return true;
+    if (!$auth) {
+        header("location: /");
     }
+}
 
-    return false;
+function debugAndFormat($var)
+{
+    echo "<pre>";
+    var_dump($var);
+    echo "</pre>";
+    exit;
 }
