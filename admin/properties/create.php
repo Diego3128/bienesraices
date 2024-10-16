@@ -54,7 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         //save the name of the image in the attribute of the instance
         $propiedad->setImage($imageName);
-
         //RESIZE IMAGE
         // read image from file system
         $image = $manager->read($imgTempDir);
@@ -72,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             mkdir(IMAGES_DIR);
         }
         //save the image in the server
-
         // save modified image in new format in the server
         $image->toJpeg()->save(IMAGES_DIR . $imageName);
 
