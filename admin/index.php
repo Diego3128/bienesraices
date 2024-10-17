@@ -1,6 +1,6 @@
 <?php
 require '../includes/app.php';
-
+//authenticate user
 isAuthenticated();
 
 // Shows conditional alert message
@@ -8,8 +8,11 @@ isAuthenticated();
 $result = $_GET["result"] ?? null;
 $result = intval($result, 10);
 
-//create an instance of the conexion
-$db = connectToDB();
+//use Propiedad class
+use App\Propiedad;
+
+//Stactic method to obtain all properties from db
+$properties = Propiedad::all();
 
 // get property's id to delete
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -40,16 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 }
-
-
-
-// get properties from database
-
-// sql query (bring all properties)
-$propertySqlQuery = "SELECT * FROM propiedades";
-
-//do the query to the db
-$propertyResult = mysqli_query($db, $propertySqlQuery);
 
 // include header template
 includeTemplate(templateName: 'header');
@@ -84,21 +77,21 @@ includeTemplate(templateName: 'header');
             </thead>
 
             <tbody><!-- show query results -->
-                <?php while ($property = mysqli_fetch_assoc($propertyResult)): ?>
+                <?php foreach ($properties as $property): ?>
                     <tr>
-                        <td><?php echo $property["id"]; ?></td>
-                        <td><?php echo $property["titulo"]; ?></td>
-                        <td><img src="/images/<?php echo $property["imagen"]; ?>" class="table-img" alt="property image"></td>
-                        <td><?php echo $property["precio"]; ?></td>
+                        <td><?php echo $property->id; ?></td>
+                        <td><?php echo $property->titulo; ?></td>
+                        <td><img src="/images/<?php echo $property->imagen; ?>" class="table-img" alt="property image"></td>
+                        <td><?php echo $property->precio; ?></td>
                         <td>
                             <form method="POST">
-                                <input type="hidden" name="id" value=<?php echo $property["id"]; ?>>
+                                <input type="hidden" name="id" value=<?php echo $property->id; ?>>
                                 <input type="submit" class="btnLarge btnLarge--red" value="Eliminar">
                             </form>
-                            <a href="properties/update.php?id=<?php echo $property["id"]; ?>" class=" btnLarge btnLarge--blue">Actualizar</a>
+                            <a href="properties/update.php?id=<?php echo $property->id; ?>" class=" btnLarge btnLarge--blue">Actualizar</a>
                         </td>
                     </tr>
-                <?php endwhile ?>
+                <?php endforeach ?>
             </tbody>
 
         </table>

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 class Propiedad
 {
-    // database
+    // database (mysqli instance)
     protected static $db;
     // each column name of propiedad table
     protected static $dbColumns = ['id', 'titulo', 'precio', 'imagen', 'descripcion', 'habitaciones', 'wc', 'estacionamiento', 'creado', 'vendedorId'];
@@ -32,18 +34,56 @@ class Propiedad
     {
         return self::$errors;
     }
+    //Get all properties (array of objects)
+    public static function all(): array
+    {
+        $query = "SELECT * FROM propiedades";
+
+        return $result = self::querySQL($query);
+    }
+    //solve a sql query
+    public static function querySQL(string $query): array | bool
+    {
+        //consult db
+        $result = self::$db->query($query);
+        //final array that will be returned with the records
+        $array = [];
+        //get records
+        if ($result->num_rows > 0) {
+            while ($record = $result->fetch_assoc()) {
+                //push each record into the array// each record is an object
+                $array[] = self::createObject($record);
+            }
+        }
+        return $array;
+    }
+    //create objects taking a record from db (active record)
+    protected static function createObject(array $record): Propiedad
+    {
+        //create a (empty) property object based on a record from db
+        $object = new self;
+        //create an object that resembles the record brought fron db
+        foreach ($record as $key => $value) {
+            //check the keys from the record array with the properties of the object
+            if (property_exists($object, $key)) {
+                $object->$key = $value;
+            }
+        }
+        return $object;
+    }
+
     //Constructor
     public function __construct($args = [])
     {
         $this->id = $args["id"] ?? null;
         $this->titulo = $args["titulo"] ?? null;
         $this->precio = $args["precio"] ?? null;
-        $this->imagen = $args["imagen"] ?? "";
+        $this->imagen = $args["imagen"] ?? null;
         $this->descripcion = $args["descripcion"] ?? null;
         $this->habitaciones = $args["habitaciones"] ?? null;
         $this->wc = $args["wc"] ?? null;
         $this->estacionamiento = $args["estacionamiento"] ?? null;
-        $this->creado = date("Y/m/d");
+        $this->creado = $args["creado"] ?? date("Y/m/d");
         $this->vendedorId = $args["vendedorId"] ?? null;
     }
     // save a new property
