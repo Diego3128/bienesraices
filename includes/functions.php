@@ -39,3 +39,12 @@ function debugAndFormat($var)
     echo "</pre>";
     exit;
 }
+//escape HTML
+function stzr(string $html): string
+{
+    if ($html === null) {
+        $html = '';
+    }
+    $s = htmlspecialchars($html);
+    return $s;
+}
