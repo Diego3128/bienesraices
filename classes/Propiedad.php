@@ -41,6 +41,15 @@ class Propiedad
 
         return $result = self::querySQL($query);
     }
+    // Search a record by its id
+    public static function findById(int $id): Propiedad | null
+    {
+        $query = "SELECT * FROM propiedades WHERE id={$id}";
+
+        $result = self::querySQL($query);
+
+        return array_shift($result);
+    }
     //solve a sql query
     public static function querySQL(string $query): array | bool
     {

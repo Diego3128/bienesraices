@@ -1,14 +1,7 @@
 <?php
-require '../../includes/functions.php';
+require '../../includes/app.php';
 
-$auth = isAuthenticated();
-
-if (!$auth) {
-    header("location: /");
-}
-// database:
-require '../../includes/config/database.php';
-$db = connectToDB();
+isAuthenticated();
 
 // get sellers
 $sellerQuery = "SELECT * FROM vendedores";
@@ -22,23 +15,12 @@ if (!filter_var($propertyId, FILTER_VALIDATE_INT)) {
     //return if it's not  a number(int)
     header("location: /admin");
 }
-// query to get the property
-$propertySqlQuery = "SELECT * FROM propiedades WHERE id=$propertyId";
-//result
-$propertyResult = mysqli_query($db, $propertySqlQuery);
-//query result
-$property = mysqli_fetch_assoc($propertyResult);
 
-// init variables
-$titulo = $property["titulo"];
-$precio = $property["precio"];
-$descripcion = $property["descripcion"];
-$habitaciones = $property["habitaciones"];
-$wc = $property["wc"];
-$estacionamiento = $property["estacionamiento"];
-$vendedorId = $property["vendedores_id"];
-$propertyImg = $property["imagen"] ?? null;
+use App\Propiedad;
+//Get property
+$propiedad = Propiedad::findById($propertyId);
 
+//Process update
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     //Split variables and update value
     $titulo = mysqli_real_escape_string($db,  $_POST["titulo"]);
@@ -111,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Create sql query
         $query = "UPDATE propiedades SET titulo = '{$titulo}', precio = {$precio}, imagen = '{$imageName}', descripcion= '{$descripcion}',
-        habitaciones= '{$habitaciones}', wc= '{$wc}', estacionamiento= '{$estacionamiento}', vendedores_id= '{$vendedorId}'
+        habitaciones= '{$habitaciones}', wc= '{$wc}', estacionamiento= '{$estacionamiento}', vendedor_id= '{$vendedorId}'
         WHERE id={$propertyId};";
 
         // var_dump($query);
@@ -145,54 +127,8 @@ includeTemplate(templateName: 'header');
     ?>
 
     <form method="post" class="form" enctype="multipart/form-data">
-        <fieldset>
-            <legend>Información general</legend>
 
-            <label for="titulo">Titulo</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Titulo de la propiedad" value="<?php echo $titulo ?>">
-
-            <label for="precio">Precio</label>
-            <input type="number" id="precio" name="precio" placeholder="Precio de la propiedad" value="<?php echo $precio ?>">
-
-            <label for="imagen">Imagen</label>
-            <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
-
-            <img src="/images/<?php echo $propertyImg ?>" alt="property current image" class="form-img--small">
-
-            <label for="descripcion">Descripción</label>
-            <textarea name="descripcion" id="descripcion" placeholder="Describe la propiedad"><?php echo $descripcion ?></textarea>
-
-        </fieldset>
-
-        <fieldset>
-            <legend>Información de la propiedad</legend>
-
-            <label for="habitaciones">Habitaciones</label>
-            <input type="number" id="habitaciones" name="habitaciones" placeholder="EJ: 5" min="1" max="10" value="<?php echo $habitaciones ?>">
-
-            <label for="wc">Baños</label>
-            <input type="number" id="wc" name="wc" placeholder="EJ: 2" min="1" max="10" value="<?php echo $wc ?>">
-
-            <label for="estacionamiento">Estacionamiento</label>
-            <input type="number" id="estacionamiento" name="estacionamiento" placeholder="EJ: 2" min="1" max="10" value="<?php echo $estacionamiento ?>">
-        </fieldset>
-
-        <fieldset>
-            <legend>Vendedor</legend>
-            <select name="vendedor">
-                <option disabled>--Elija vendedor--</option>
-                <?php
-                while ($sellerRow = mysqli_fetch_assoc($sellerResult)) : ?>
-                    <option <?php echo $vendedorId === $sellerRow["id"] ? "selected" : ""; ?> value="<?php echo $sellerRow["id"]; ?>">
-                        <?php echo $sellerRow["nombre"] . " " . $sellerRow["apellido"];
-                        ?>
-                    </option>
-                <?php
-                endwhile;
-                ?>
-
-            </select>
-        </fieldset>
+        <?php include "../../includes/templates/property_form.php" ?>
 
         <input type="submit" value="Actualizar propiedad" class="btnSmall btnSmall--green">
 

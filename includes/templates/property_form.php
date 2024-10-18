@@ -10,6 +10,10 @@
     <label for="imagen">Imagen</label>
     <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
 
+    <?php if ($propiedad->imagen): ?>
+        <img src="/images/<?php echo $propiedad->imagen ?>" alt="property current image" class="form-img--small">
+    <?php endif ?>
+
     <label for="descripcion">Descripción</label>
     <textarea name="descripcion" id="descripcion" placeholder="Describe la propiedad"><?php echo stzr($propiedad->descripcion) ?></textarea>
 
