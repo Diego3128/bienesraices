@@ -20,33 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $propertyId = filter_var($propertyId, FILTER_VALIDATE_INT);
 
     if ($propertyId) {
-        // delete from database
-        $imgQuery = "SELECT imagen FROM propiedades WHERE id={$propertyId}";
-
-        $imageName = mysqli_fetch_assoc(mysqli_query($db, $imgQuery))["imagen"];
-
-        $query = "DELETE FROM propiedades WHERE id={$propertyId};";
-
-
-        $result = mysqli_query($db, $query);
-        if ($result) {
-            // also delete the image
-            $imgPath = "../images/" . $imageName;
-
-            if (file_exists($imgPath)) {
-                unlink($imgPath);
-            }
-
-            header("location: /admin?result=3");
-        } else {
-            header("location: /admin?result=4");
-        }
+        $propiedad = Propiedad::findById($propertyId);
+        if ($propiedad) $propiedad->delete();
     }
 }
-
 // include header template
 includeTemplate(templateName: 'header');
-
 ?>
 
 <main class="container section">
@@ -100,8 +79,5 @@ includeTemplate(templateName: 'header');
 </main>
 
 <?php
-// close db conexion
-mysqli_close($db);
-
 includeTemplate(templateName: 'footer');
 ?>

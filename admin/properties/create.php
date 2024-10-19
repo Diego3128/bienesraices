@@ -62,11 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $image->toJpeg()->save(IMAGES_DIR . $imageName);
 
         //save the property into the database
-        $result = $propiedad->save();
-
-        if ($result) {
-            header("location: /admin?result=1");
-        }
+        $propiedad->save();
     }
 }
 

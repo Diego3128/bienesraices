@@ -84,7 +84,7 @@ class Propiedad
     //Constructor
     public function __construct($args = [])
     {
-        $this->id = $args["id"] ?? '';
+        $this->id = $args["id"] ?? NULL;
         $this->titulo = $args["titulo"] ?? '';
         $this->precio = $args["precio"] ?? '';
         $this->imagen = $args["imagen"] ?? '';
@@ -96,19 +96,18 @@ class Propiedad
         $this->vendedorId = $args["vendedorId"] ?? '';
     }
     //save a propery (update or create)
-    public function save(): ?bool
+    public function save()
     {
-        if (!empty($this->id)) {
+        if (!is_null($this->id)) {
             //update  a record
             $this->update();
         } else {
             //create a new record
-            $result = $this->create();
-            return $result;
+            $this->create();
         }
     }
     //update a property
-    public function update()
+    protected function update()
     {
         //Get an array with the sanitized attributes
         $attributes = $this->sanitizeAttributes();
@@ -130,8 +129,8 @@ class Propiedad
             header("location: /admin?result=2");
         }
     }
-    // cretae a new property
-    public function create(): bool
+    // create a new property
+    protected function create(): void
     {
         //Get an array with the sanitized attributes
         $attributes = $this->sanitizeAttributes();
@@ -151,8 +150,27 @@ class Propiedad
         $result = self::$db->query($query);
         //insertion queries return a boolean
 
-        return $result;
+        if ($result) {
+            header("location: /admin?result=1");
+        } else {
+            header("location: /admin?result=4");
+        }
     }
+    //delete a property
+    public function delete(): void
+    {
+        $query = "DELETE FROM propiedades WHERE id={$this->id} LIMIT 1";
+
+        $result = self::$db->query($query);
+
+        if ($result) {
+            $this->deleteImg();
+            header("location: /admin?result=3");
+        } else {
+            header("location: /admin?result=4");
+        }
+    }
+    //form an array resembling the record in db
     public function createAttributes(): array
     {
         //associative array with the same structure as the table (propiedades) in db
@@ -217,15 +235,20 @@ class Propiedad
     {
         //when updating check if an previous image exists
         //an id attribute only has a value when updating  a new property
-        if (!empty($this->id)) {
-            $previousImg = IMAGES_DIR . $this->imagen;
-            if (file_exists($previousImg)) {
-                unlink($previousImg);
-            }
+        if (!is_null($this->id)) {
+            $this->deleteImg();
         }
         //set new image
         if ($image) {
             $this->imagen = $image;
+        }
+    }
+    //delete image from the server
+    protected function deleteImg()
+    {
+        $image = IMAGES_DIR . $this->imagen;
+        if (file_exists($image)) {
+            unlink($image);
         }
     }
     //sync the object in memory with the changes made by the user
