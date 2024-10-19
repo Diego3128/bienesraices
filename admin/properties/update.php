@@ -17,94 +17,57 @@ if (!filter_var($propertyId, FILTER_VALIDATE_INT)) {
 }
 
 use App\Propiedad;
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
+// create image manager with GD driver
+$manager = new ImageManager(new Driver());
+
 //Get property
 $propiedad = Propiedad::findById($propertyId);
-
-//Process update
+//if the id doesn't exist return to the admin panel
+if (!$propiedad) {
+    header("location: /admin/?result=4");
+}
+//init var for possible errors
+$errors = Propiedad::getErrors();
+//Process update request
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    //Split variables and update value
-    $titulo = mysqli_real_escape_string($db,  $_POST["titulo"]);
-    $precio = mysqli_real_escape_string($db,  $_POST["precio"]);
-    $descripcion = mysqli_real_escape_string($db,  $_POST["descripcion"]);
-    $habitaciones = mysqli_real_escape_string($db,  $_POST["habitaciones"]);
-    $wc = mysqli_real_escape_string($db,  $_POST["wc"]);
-    $estacionamiento = mysqli_real_escape_string($db,  $_POST["estacionamiento"]);
-    $vendedorId =  isset($_POST["vendedor"]) ? $_POST["vendedor"] : "";
+    //array with the changes made in the form
+    $args = $_POST["propiedad"];
+    //update property in memory
+    $propiedad->synchronize($args);
+    // check if the a new image was uploaded:
+    if ($_FILES["propiedad"]["error"]["imagen"] === UPLOAD_ERR_OK && $_FILES["propiedad"]["tmp_name"]["imagen"]) {
+        //file temporary location
+        $imgTempDir = $_FILES["propiedad"]["tmp_name"]["imagen"];
 
-    $imagen = $_FILES["imagen"] ?? null;
+        //CREATE A RANDOM NAME INCLUDING THE EXTENSION
+        $imageExt = pathinfo($_FILES["propiedad"]["name"]["imagen"])["extension"];
+        // random name plus the extension
+        $imageName = md5(uniqid(mt_rand())) . "." . $imageExt;
 
-    $errors = []; //check inputs for possible erros
+        //save the name of the new image in the attribute of the instance
+        $propiedad->setImage($imageName);
+        // read image from file system
+        $image = $manager->read($imgTempDir);
+        // resize image proportionally to 800 width 600 height
+        $image->cover(800, 600);
+    }
+    //input validation
+    $propiedad->validateInputs();
+    //check errors
+    $errors = Propiedad::getErrors(); //check inputs for possible errors
 
-
-    if (!$titulo) {
-        $errors[] = "El titulo es necesario";
-    }
-    if (!$precio) {
-        $errors[] = "El precio es necesario";
-    }
-    if (strlen($descripcion) < 50) {
-        $errors[] = "La descripción es muy corta";
-    }
-    if (!$wc) {
-        $errors[] = "El numero de baños es requerido";
-    }
-    if (!$habitaciones) {
-        $errors[] = "El numero de habitaciones es requerido";
-    }
-    if (!$estacionamiento) {
-        $errors[] = "El numero de lugares de estacionamiento es requerido";
-    }
-    if (!$vendedorId) {
-        $errors[] = "Elija un vendedor";
-    }
-    // validate image size, max: 1mb 
-    $maxSize = 1000000;
-    if ($imagen["size"] > $maxSize) {
-        $errors[] = "La imagen es muy grande";
-    }
-
-    // if there are no errors save in database
+    // if there are no errors update in database
     if (empty($errors)) {
-        //upload files // check if the directoy doesn't exist
-        $imgDir = "../../images/";
-        if (!is_dir($imgDir)) {
-            mkdir($imgDir);
+        //save the possible new image in the server
+        if (isset($image)) {
+            $image->toJpeg()->save(IMAGES_DIR . $imageName);
         }
-
-        $imageName = "";
-        //check if  anew image has been uploaded
-        if ($imagen["name"]) {
-            //delete previous image
-            if ($propertyImg) {
-                $previousImg = $imgDir . $propertyImg;
-                unlink($previousImg);
-            }
-            //save new image 
-            // image extension (jpg, png..)
-            $imageExt = pathinfo($imagen["name"])["extension"];
-            // random name plus the extension
-            $imageName = md5(uniqid(mt_rand())) . "." . $imageExt;
-            // move to a destination directory
-            move_uploaded_file($imagen["tmp_name"], $imgDir  . $imageName);
-        } else {
-            // no new image it keeps the same
-            $imageName = $propertyImg;
-        }
-
-        // Create sql query
-        $query = "UPDATE propiedades SET titulo = '{$titulo}', precio = {$precio}, imagen = '{$imageName}', descripcion= '{$descripcion}',
-        habitaciones= '{$habitaciones}', wc= '{$wc}', estacionamiento= '{$estacionamiento}', vendedor_id= '{$vendedorId}'
-        WHERE id={$propertyId};";
-
-        // var_dump($query);
-        // exit;
-        //do the query
-        $queryResult = mysqli_query($db, $query);
-
-        if ($queryResult) {
-            //redirect user
-            header("location: /admin?result=2");
-        }
+        //update the property into the database
+        $propiedad->save();
     }
 }
 

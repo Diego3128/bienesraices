@@ -95,8 +95,43 @@ class Propiedad
         $this->creado = $args["creado"] ?? date("Y/m/d");
         $this->vendedorId = $args["vendedorId"] ?? '';
     }
-    // save a new property
-    public function save(): bool
+    //save a propery (update or create)
+    public function save(): ?bool
+    {
+        if (!empty($this->id)) {
+            //update  a record
+            $this->update();
+        } else {
+            //create a new record
+            $result = $this->create();
+            return $result;
+        }
+    }
+    //update a property
+    public function update()
+    {
+        //Get an array with the sanitized attributes
+        $attributes = $this->sanitizeAttributes();
+        //array with this shape in each index: "key = 'value'"
+        $values = [];
+
+        foreach ($attributes as $key => $value) {
+            $values[] = "$key = '{$value}'";
+        }
+
+        $query = "UPDATE propiedades SET ";
+        $query .= join(", ", $values);
+        $query .= " WHERE id ='" . self::$db->escape_string($this->id) . "'";
+        $query .= "LIMIT 1";
+
+        $result = self::$db->query($query);
+
+        if ($result) {
+            header("location: /admin?result=2");
+        }
+    }
+    // cretae a new property
+    public function create(): bool
     {
         //Get an array with the sanitized attributes
         $attributes = $this->sanitizeAttributes();
@@ -180,8 +215,30 @@ class Propiedad
     //upload image
     public function setImage(String $image)
     {
+        //when updating check if an previous image exists
+        //an id attribute only has a value when updating  a new property
+        if (!empty($this->id)) {
+            $previousImg = IMAGES_DIR . $this->imagen;
+            if (file_exists($previousImg)) {
+                unlink($previousImg);
+            }
+        }
+        //set new image
         if ($image) {
             $this->imagen = $image;
+        }
+    }
+    //sync the object in memory with the changes made by the user
+    public function synchronize(array $args = []): void
+    {
+        //update the current object (the object calling the method ($this))
+        if (!empty($args)) {
+            foreach ($args as $key => $value) {
+                //check if the key is a property in the current object
+                if (property_exists($this, $key) && (!is_null($value) || !empty($value))) {
+                    $this->$key = $value;
+                }
+            }
         }
     }
 }

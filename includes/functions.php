@@ -42,7 +42,7 @@ function debugAndFormat($var)
 //escape HTML
 function stzr(string $html): string
 {
-    if ($html === null) {
+    if (is_null($html)) {
         $html = '';
     }
     $s = htmlspecialchars($html);

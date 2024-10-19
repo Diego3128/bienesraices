@@ -23,21 +23,19 @@ $propiedad = new Propiedad;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     //create a new instance of Propiedad
-    $propiedad = new Propiedad($_POST);
+    $propiedad = new Propiedad($_POST["propiedad"]);
     //img variables
     $image;
     $imageName;
 
     // check if the image was correctly uploaded:
-    if ($_FILES["imagen"]["error"] === UPLOAD_ERR_OK && $_FILES["imagen"]["tmp_name"]) {
-        //get  data from the uploded image
-        $propertyImg = $_FILES["imagen"];
+    if ($_FILES["propiedad"]["error"]["imagen"] === UPLOAD_ERR_OK && $_FILES["propiedad"]["tmp_name"]["imagen"]) {
         //file temporary location
-        $imgTempDir = $propertyImg["tmp_name"];
+        $imgTempDir = $_FILES["propiedad"]["tmp_name"]["imagen"];
 
         //CREATE A RANDOM NAME INCLUDING THE EXTENSION
         // get image extension (jpg, png..)
-        $imageExt = pathinfo($propertyImg["name"])["extension"];
+        $imageExt = pathinfo($_FILES["propiedad"]["name"]["imagen"])["extension"];
         // random name plus the extension
         $imageName = md5(uniqid(mt_rand())) . "." . $imageExt;
 
