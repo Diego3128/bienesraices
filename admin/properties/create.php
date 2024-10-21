@@ -1,9 +1,11 @@
 <?php
 require '../../includes/app.php';
-
+//check session
 isAuthenticated();
 
+//use classes
 use App\Propiedad;
+use App\Vendedor;
 
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -11,14 +13,12 @@ use Intervention\Image\Drivers\Gd\Driver;
 // create image manager with GD driver
 $manager = new ImageManager(new Driver());
 
-// query to get sellers
-$sellerSqlQuery = "SELECT * FROM vendedores";
-//results
-$sellerResult = mysqli_query($db, $sellerSqlQuery);
+//array with all the sellers
+$vendedores = Vendedor::all();
 
 //init variable to check inputs for possible errors
 $errors = Propiedad::getErrors();
-//init property variable
+//init an empty property object
 $propiedad = new Propiedad;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -32,12 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($_FILES["propiedad"]["error"]["imagen"] === UPLOAD_ERR_OK && $_FILES["propiedad"]["tmp_name"]["imagen"]) {
         //file temporary location
         $imgTempDir = $_FILES["propiedad"]["tmp_name"]["imagen"];
-
-        //CREATE A RANDOM NAME INCLUDING THE EXTENSION
-        // get image extension (jpg, png..)
-        $imageExt = pathinfo($_FILES["propiedad"]["name"]["imagen"])["extension"];
         // random name plus the extension
-        $imageName = md5(uniqid(mt_rand())) . "." . $imageExt;
+        $imageName = md5(uniqid(mt_rand())) . ".jpg";
 
         //save the name of the image in the attribute of the instance
         $propiedad->setImage($imageName);

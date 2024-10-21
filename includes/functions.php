@@ -48,3 +48,34 @@ function stzr(string $html): string
     $s = htmlspecialchars($html);
     return $s;
 }
+//validate type of content
+function validateContentType(string $type)
+{
+    $types = ['property', 'seller'];
+    return in_array($type, $types);
+}
+//show notification
+function showNotification($code): string | bool
+{
+    $message = '';
+    $code = intval($code, 10);
+
+    switch ($code) {
+        case 1:
+            $message = "Creado con exito!";
+            break;
+        case 2:
+            $message = "Actualizado con exito!";
+            break;
+        case 3:
+            $message = "Eliminado con exito!";
+            break;
+        case 4:
+            $message = "Algo salío mal..";
+            break;
+        default:
+            $message = false;
+            break;
+    }
+    return $message;
+}

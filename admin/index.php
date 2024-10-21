@@ -4,24 +4,34 @@ require '../includes/app.php';
 isAuthenticated();
 
 // Shows conditional alert message
-//1 = created, 2= updated, 3= deleted 4= error
-$result = $_GET["result"] ?? null;
-$result = intval($result, 10);
+$result = $_GET["result"] ?? '';
 
 //use Propiedad class
 use App\Propiedad;
+//use Vendedor class
+use App\Vendedor;
 
-//Stactic method to obtain all properties from db
+//Stactic method to obtain all records from db
 $properties = Propiedad::all();
+$sellers = Vendedor::all();
 
-// get property's id to delete
+// get objects's id to delete
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $propertyId = intval($_POST["id"]);
-    $propertyId = filter_var($propertyId, FILTER_VALIDATE_INT);
-
-    if ($propertyId) {
-        $propiedad = Propiedad::findById($propertyId);
-        if ($propiedad) $propiedad->delete();
+    //validate id
+    $id = intval($_POST["id"]);
+    $id = filter_var($id, FILTER_VALIDATE_INT);
+    //type of content (property || seller)
+    $type = $_POST["type"];
+    //check correct type
+    if (validateContentType($type) && $id) {
+        //identify the type
+        if ($type === "property") {
+            $propiedad = Propiedad::findById($id);
+            if ($propiedad) $propiedad->delete();
+        } elseif ($type === "seller") {
+            $vendedor = Vendedor::findById($id);
+            if ($vendedor) $vendedor->delete();
+        }
     }
 }
 // include header template
@@ -31,17 +41,20 @@ includeTemplate(templateName: 'header');
 <main class="container section">
     <h2>Administrador de bienesraices</h2>
 
-    <?php if ($result === 1): ?>
-        <div class="alert success">Propiedad creada con exito!</div>
-    <?php elseif ($result === 2): ?>
-        <div class="alert success">Propiedad actualizada con exito!</div>
-    <?php elseif ($result === 3): ?>
-        <div class="alert success">Propiedad eliminada correctamente!</div>
-    <?php elseif ($result === 4): ?>
-        <div class="alert success">Algo salió mal!</div>
-    <?php endif; ?>
+    <?php
+    $message = showNotification($result);
+    if ($message): ?>
+        <div class="alert success"><?php echo stzr($message); ?></div>
+    <?php
+    endif;
+    ?>
 
-    <a href="/admin/properties/create.php" class="btnSmall btnSmall--green">Crear</a>
+
+    <a href="/admin/properties/create.php" class="btnSmall btnSmall--green">Crear propiedad</a>
+
+    <a href="/admin/sellers/create.php" class="btnSmall btnSmall--yellow">Crear vendedor</a>
+
+    <h2>Propiedades</h2>
 
     <div class="table-container">
         <table class="properties">
@@ -65,6 +78,7 @@ includeTemplate(templateName: 'header');
                         <td>
                             <form method="POST">
                                 <input type="hidden" name="id" value=<?php echo $property->id; ?>>
+                                <input type="hidden" name="type" value="property">
                                 <input type="submit" class="btnLarge btnLarge--red" value="Eliminar">
                             </form>
                             <a href="properties/update.php?id=<?php echo $property->id; ?>" class=" btnLarge btnLarge--blue">Actualizar</a>
@@ -75,6 +89,41 @@ includeTemplate(templateName: 'header');
 
         </table>
     </div>
+
+    <h2>Vendedores</h2>
+
+    <div class="table-container">
+        <table class="properties">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody><!-- show query results -->
+                <?php foreach ($sellers as $seller): ?>
+                    <tr>
+                        <td><?php echo $seller->id; ?></td>
+                        <td><?php echo $seller->nombre . " " . $seller->apellido ?></td>
+                        <td><?php echo $seller->telefono; ?></td>
+                        <td>
+                            <form method="POST">
+                                <input type="hidden" name="id" value=<?php echo $seller->id; ?>>
+                                <input type="hidden" name="type" value="seller">
+                                <input type="submit" class="btnLarge btnLarge--red" value="Eliminar">
+                            </form>
+                            <a href="sellers/update.php?id=<?php echo $seller->id; ?>" class=" btnLarge btnLarge--blue">Actualizar</a>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody>
+
+        </table>
+    </div>
+
 
 </main>
 

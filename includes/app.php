@@ -9,6 +9,5 @@ require __DIR__ . '/../vendor/autoload.php';
 // connect to the database
 $db = connectToDB();
 
-// set db to the Propiedad class
-
-App\Propiedad::setDB($db);
+// set db to the main class ActiveRecord
+App\ActiveRecord::setDB($db);

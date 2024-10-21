@@ -37,13 +37,13 @@
     <select name="propiedad[vendedorId]">
         <option disabled selected>--Elija vendedor--</option>
         <?php
-        while ($sellerRow = mysqli_fetch_assoc($sellerResult)) : ?>
-            <option <?php echo stzr($propiedad->vendedorId) === $sellerRow["id"] ? "selected" : ""; ?> value="<?php echo $sellerRow["id"]; ?>">
-                <?php echo $sellerRow["nombre"] . " " . $sellerRow["apellido"];
+        foreach ($vendedores as $vendedor): ?>
+            <option <?php echo stzr($propiedad->vendedorId) === $vendedor->id ? "selected" : ""; ?> value="<?php echo stzr($vendedor->id); ?>">
+                <?php echo stzr($vendedor->nombre . " " . $vendedor->apellido);
                 ?>
             </option>
         <?php
-        endwhile;
+        endforeach;
         ?>
 
     </select>

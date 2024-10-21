@@ -17,6 +17,7 @@ if (!filter_var($propertyId, FILTER_VALIDATE_INT)) {
 }
 
 use App\Propiedad;
+use App\Vendedor;
 
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -30,6 +31,8 @@ $propiedad = Propiedad::findById($propertyId);
 if (!$propiedad) {
     header("location: /admin/?result=4");
 }
+//array with all the sellers
+$vendedores = Vendedor::all();
 //init var for possible errors
 $errors = Propiedad::getErrors();
 //Process update request
@@ -43,10 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         //file temporary location
         $imgTempDir = $_FILES["propiedad"]["tmp_name"]["imagen"];
 
-        //CREATE A RANDOM NAME INCLUDING THE EXTENSION
-        $imageExt = pathinfo($_FILES["propiedad"]["name"]["imagen"])["extension"];
         // random name plus the extension
-        $imageName = md5(uniqid(mt_rand())) . "." . $imageExt;
+        $imageName = md5(uniqid(mt_rand())) . ".jpg";
 
         //save the name of the new image in the attribute of the instance
         $propiedad->setImage($imageName);
